@@ -10,5 +10,26 @@ trim_trailing_whitespace = true
 [*.cs]
 indent_size = 4
 
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_property = false:none
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_field = false:none
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_method = false:none
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_event = false:none
+
+# CA1304: Specify CultureInfo
+dotnet_diagnostic.CA1304.severity = none
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
+# CA2227: Collection properties should be read only
+dotnet_diagnostic.CA2227.severity = none
+
 [*.{js,json,vue}]
 indent_size = 2

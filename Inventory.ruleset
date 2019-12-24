@@ -68,8 +68,26 @@
     <Rule Id="CA2241" Action="Warning" />
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
-  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
-    <Rule Id="CA1822" Action="Info" />
-    <Rule Id="CA2007" Action="None" />
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="Hidden" />
+    <Rule Id="SA1600" Action="Hidden" />
+    <Rule Id="SA1633" Action="Hidden" />
+    <Rule Id="SA1203" Action="Hidden" />
+    <Rule Id="SA1629" Action="Hidden" />
+    <Rule Id="SA1201" Action="Hidden" />
+    <Rule Id="SA1204" Action="Hidden" />
+    <Rule Id="SA1402" Action="Hidden" />
+    <Rule Id="SA1649" Action="Hidden" />
+    <Rule Id="SA1623" Action="Hidden" />
+    <Rule Id="SA1212" Action="Warning" />
+    <Rule Id="SA1601" Action="Hidden" />
+    <Rule Id="SA1615" Action="Hidden" />
+    <Rule Id="SA1611" Action="Hidden" />
+    <Rule Id="SA1129" Action="Hidden" />
+    <Rule Id="SA1200" Action="Hidden" />
+    <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1208" Action="None" />
+    <Rule Id="SA1413" Action="None" />
+    <Rule Id="SA1515" Action="None" />
   </Rules>
 </RuleSet>
