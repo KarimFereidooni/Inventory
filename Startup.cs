@@ -1,5 +1,6 @@
 using ElectronNET.API;
 using ElectronNET.API.Entities;
+using Inventory.Data;
 using Inventory.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -113,7 +114,7 @@ namespace Inventory
 #if DEBUG
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:8080")
+                builder.WithOrigins("http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:5000", "https://localhost:5001")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -124,6 +125,12 @@ namespace Inventory
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseExceptionMiddleware();
@@ -149,7 +156,7 @@ namespace Inventory
 
                 if (env.IsDevelopment())
                 {
-                    // endpoints.MapToVueCliProxy("{*path}", new SpaOptions { SourcePath = "src" }, "serve", regex: "Compiled successfully");
+                    endpoints.MapToVueCliProxy("{*path}", new SpaOptions { SourcePath = "src" }, "serve", regex: "Compiled successfully");
                 }
                 else
                 {

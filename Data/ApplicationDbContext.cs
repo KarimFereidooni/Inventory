@@ -22,6 +22,8 @@ namespace Inventory.Data
              .AddInterceptors(new Extensions.HintCommandInterceptor());
         }
 
+        public virtual DbSet<Models.DataModels.Product> Products { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -39,7 +41,8 @@ namespace Inventory.Data
             modelBuilder.Entity<UserClaim>(ModelBuilders.User.UserClaimBuilder.Build);
             modelBuilder.Entity<UserInRole>(ModelBuilders.User.UserInRoleBuilder.Build);
             modelBuilder.Entity<UserRoleClaim>(ModelBuilders.User.UserRoleClaimBuilder.Build);
-            modelBuilder.Entity<Product>(Inventory.Data.ModelBuilders.ProductBuilder.Build);
+
+            modelBuilder.Entity<Models.DataModels.Product>(ModelBuilders.ProductBuilder.Build);
         }
     }
 }

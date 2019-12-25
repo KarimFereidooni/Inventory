@@ -8,47 +8,61 @@
             <span class="ml-2">اضافه کردن</span>
           </v-btn>
         </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">اطلاعات محصول</span>
-          </v-card-title>
+        <form @submit="save">
+          <v-card>
+            <v-card-title>
+              <span class="headline">اطلاعات محصول</span>
+            </v-card-title>
 
-          <v-card-text>
-            <form @submit="save">
+            <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="6">
+                  <v-col cols="12">
                     <v-text-field
                       autofocus
                       v-model="item.name"
                       label="نام محصول"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
+                  <v-col cols="12" sm="6">
                     <v-text-field
+                      type="number"
                       v-model="item.count"
                       label="تعداد"
                     ></v-text-field>
                   </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-autocomplete
+                      v-model="item.enumerationUnit"
+                      :items="['عدد', 'کیلوگرم', 'تن']"
+                      label="واحد شمارش"
+                    >
+                    </v-autocomplete>
+                  </v-col>
                 </v-row>
               </v-container>
-            </form>
-          </v-card-text>
+            </v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false"
-              >انصراف</v-btn
-            >
-            <v-btn color="blue darken-1" text @click="save">ثبت</v-btn>
-          </v-card-actions>
-        </v-card>
+            <v-card-actions>
+              <v-btn
+                type="submit"
+                color="blue darken-1"
+                :loading="saving"
+                text
+                @click="save"
+                >ثبت</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="dialog = false"
+                >انصراف</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </form>
       </v-dialog>
-      <v-btn text>
+      <v-btn text :loading="exporting" @click="exportExcel">
         <v-icon>mdi-excel</v-icon>
         <span class="ml-2">خروجی اکسل</span>
       </v-btn>
-      <v-spacer></v-spacer>
     </v-app-bar>
 
     <v-content>
@@ -74,6 +88,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import InventoryService from "./services/InventoryService";
+import { download } from "@/download";
 
 export default Vue.extend({
   name: "App",
@@ -81,11 +97,14 @@ export default Vue.extend({
     dialog: false,
     item: {
       name: "",
-      count: ""
+      count: "",
+      enumerationUnit: ""
     },
     totalProducts: 0,
     products: [],
     loading: true,
+    saving: false,
+    exporting: false,
     options: {} as any,
     headers: [
       {
@@ -96,91 +115,62 @@ export default Vue.extend({
     ]
   }),
   methods: {
-    save() {
-      //
+    async save() {
+      try {
+        this.saving = true;
+        await InventoryService.addProduct(this.item);
+        this.dialog = false;
+        await this.loadData();
+        this.resetForm();
+      } finally {
+        this.saving = false;
+      }
     },
-    getDataFromApi() {
-      this.loading = true;
-      return new Promise((resolve, reject) => {
+    async loadData() {
+      try {
+        this.loading = true;
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-
-        let items = this.getProducts();
-        const total = items.length;
-
-        if (sortBy.length === 1 && sortDesc.length === 1) {
-          items = items.sort((a, b) => {
-            const sortA = a[sortBy[0]];
-            const sortB = b[sortBy[0]];
-
-            if (sortDesc[0]) {
-              if (sortA < sortB) {
-                return 1;
-              }
-              if (sortA > sortB) {
-                return -1;
-              }
-              return 0;
-            } else {
-              if (sortA < sortB) {
-                return -1;
-              }
-              if (sortA > sortB) {
-                return 1;
-              }
-              return 0;
-            }
-          });
-        }
-
-        if (itemsPerPage > 0) {
-          items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-        }
-
-        setTimeout(() => {
-          this.loading = false;
-          resolve({
-            items,
-            total
-          });
-        }, 1000);
-      });
+        const result = await InventoryService.getProducts(
+          page,
+          itemsPerPage,
+          sortBy[0] || "",
+          sortDesc[0] || false
+        );
+        this.products = result.items;
+        this.totalProducts = result.totalCount;
+      } finally {
+        this.loading = false;
+      }
     },
-    getProducts() {
-      return [
-        {
-          name: "Frozen Yogurt",
-          count: 159
-        },
-        {
-          name: "Ice cream sandwich",
-          count: 237
-        },
-        {
-          name: "Eclair",
-          count: 262
-        },
-        {
-          name: "Cupcake",
-          count: 305
-        },
-        {
-          name: "Gingerbread",
-          count: 356
-        },
-        {
-          name: "Jelly bean",
-          count: 375
-        }
-      ];
+    async exportExcel() {
+      try {
+        this.exporting = true;
+        const { sortBy, sortDesc } = this.options;
+        const result = await InventoryService.exportExcel(
+          sortBy[0] || "",
+          sortDesc[0] || false
+        );
+        download(
+          result,
+          "Export.xlsx",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+      } finally {
+        this.exporting = false;
+      }
+    },
+    resetForm() {
+      this.item = {
+        name: "",
+        count: "",
+        enumerationUnit: ""
+      };
     }
   },
   watch: {
     options: {
       handler() {
-        this.getDataFromApi().then((data: any) => {
-          this.products = data.items;
-          this.totalProducts = data.total;
-        });
+        this.loadData();
       },
       deep: true
     }
