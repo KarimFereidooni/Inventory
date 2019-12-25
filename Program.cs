@@ -1,4 +1,4 @@
-﻿using ElectronNET.API;
+using ElectronNET.API;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -15,8 +15,8 @@ namespace Inventory
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseElectron(args);
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

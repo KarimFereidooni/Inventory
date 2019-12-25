@@ -39,6 +39,7 @@ namespace Inventory.Data
             modelBuilder.Entity<UserClaim>(ModelBuilders.User.UserClaimBuilder.Build);
             modelBuilder.Entity<UserInRole>(ModelBuilders.User.UserInRoleBuilder.Build);
             modelBuilder.Entity<UserRoleClaim>(ModelBuilders.User.UserRoleClaimBuilder.Build);
+            modelBuilder.Entity<Product>(Inventory.Data.ModelBuilders.ProductBuilder.Build);
         }
     }
 }

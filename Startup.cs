@@ -113,7 +113,7 @@ namespace Inventory
 #if DEBUG
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:8081")
+                builder.WithOrigins("http://localhost:8080")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -122,7 +122,7 @@ namespace Inventory
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -158,11 +158,26 @@ namespace Inventory
             });
 
             // Open the Electron-Window here
-            Task.Run(async () =>
+            Task.Run(() => this.BootstrapElectron(lifetime));
+        }
+
+        private async Task BootstrapElectron(IHostApplicationLifetime lifetime)
+        {
+            var browserWindow = await Electron.WindowManager.CreateWindowAsync(
+                new BrowserWindowOptions()
+                {
+                    Title = "انبار داری",
+                    AutoHideMenuBar = true,
+                    Show = false
+                });
+
+            browserWindow.SetMenuBarVisibility(false);
+            browserWindow.OnReadyToShow += () =>
             {
-                var win = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions() { Title = "Inventory", AutoHideMenuBar = true });
-                win.SetMenuBarVisibility(false);
-            });
+                browserWindow.Show();
+            };
+
+            browserWindow.OnClosed += lifetime.StopApplication;
         }
     }
 }
