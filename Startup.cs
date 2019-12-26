@@ -48,11 +48,7 @@ namespace Inventory
                         {
                             // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                             options.CheckConsentNeeded = context => true;
-#if DEBUG
-                            options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
-#else
                             options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
-#endif
                         });
 
             services.Configure<IdentityOptions>(options =>
@@ -82,11 +78,6 @@ namespace Inventory
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
-                // options.Cookie.HttpOnly = true;
-                // options.Cookie.Expiration = System.TimeSpan.FromMinutes(30);
-#if DEBUG
-                options.Cookie.SameSite = SameSiteMode.None;
-#endif
                 options.ExpireTimeSpan = System.TimeSpan.FromMinutes(30);
 
                 // If the LoginPath isn't set, ASP.NET Core defaults
@@ -109,16 +100,6 @@ namespace Inventory
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.Cookie.Path = "/";
             });
-
-#if DEBUG
-            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
-            {
-                builder.WithOrigins("http://localhost:8080", "http://127.0.0.1:8080", "http://localhost:5000", "https://localhost:5001")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-            }));
-#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,9 +124,6 @@ namespace Inventory
             app.UseCookiePolicy();
             app.UseRouting();
 
-#if DEBUG
-            app.UseCors("CorsPolicy");
-#endif
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
@@ -174,15 +152,9 @@ namespace Inventory
                 {
                     Title = "انبار داری",
                     AutoHideMenuBar = true,
-                    Show = false
                 });
 
             browserWindow.SetMenuBarVisibility(false);
-            browserWindow.OnReadyToShow += () =>
-            {
-                browserWindow.Show();
-            };
-
             browserWindow.OnClosed += lifetime.StopApplication;
         }
     }

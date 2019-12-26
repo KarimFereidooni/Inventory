@@ -1,5 +1,6 @@
 module.exports = {
   outputDir: "./wwwroot/dist/",
+  publicPath: "/dist/",
   transpileDependencies: ["vuetify"],
   devServer: {
     public: "localhost",
