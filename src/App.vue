@@ -44,12 +44,7 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-btn
-                type="submit"
-                color="blue darken-1"
-                :loading="saving"
-                text
-                @click="save"
+              <v-btn type="submit" color="blue darken-1" :loading="saving" text
                 >ثبت</v-btn
               >
               <v-btn color="blue darken-1" text @click="dialog = false"
