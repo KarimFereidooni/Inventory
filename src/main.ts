@@ -6,6 +6,7 @@ import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import "@/assets/style/iransans.css";
 import "@/assets/style/app.css";
+import "./plugins/prototype";
 
 Vue.config.productionTip = false;
 

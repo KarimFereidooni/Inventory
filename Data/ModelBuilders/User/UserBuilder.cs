@@ -31,9 +31,6 @@ namespace Inventory.Data.ModelBuilders.User
             entity.Property(e => e.Surname)
                 .HasMaxLength(250);
 
-            entity.Property(e => e.FullName)
-                .HasComputedColumnSql("LTRIM(RTRIM(ISNULL([Title],'') + ' ' + [Name] + ' ' + ISNULL([Surname],''))) PERSISTED");
-
             entity.Property(e => e.NationCode)
                 .HasMaxLength(10);
 

@@ -38,8 +38,7 @@ namespace Inventory
                 options.AutomaticAuthentication = false;
             });
 
-            services.AddDbContext<Data.ApplicationDbContext>(options =>
-                options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<Data.ApplicationDbContext>();
 
             services.AddIdentity<Models.DataModels.UserModels.User, Models.DataModels.UserModels.UserRole>()
             .AddEntityFrameworkStores<Data.ApplicationDbContext>()
@@ -160,7 +159,7 @@ namespace Inventory
                 }
                 else
                 {
-                    endpoints.MapFallbackToFile("index.html");
+                    endpoints.MapFallbackToFile("dist\\index.html");
                 }
             });
 

@@ -9,6 +9,8 @@
     "deploy": "yarn run clean && dotnet publish /p:PublishProfile=DeployProfile",
     "clean": "rimraf bin/Release/* && rimraf wwwroot/dist/*",
     "publish": "yarn run clean && dotnet publish -c Release --self-contained -r win-x64",
+    "electronize-start": "yarn run clean && electronize start",
+    "electronize-build": "yarn run clean && electronize build /target win",
     "start": "cross-env ASPNETCORE_ENVIRONMENT=Development NODE_ENV=development dotnet run",
     "start-watch": "cross-env ASPNETCORE_ENVIRONMENT=Development NODE_ENV=development dotnet watch run"
   },
@@ -36,6 +38,7 @@
     "@vue/cli-plugin-pwa": "^4.1.0",
     "@vue/cli-plugin-typescript": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
+    "cross-env": "^6.0.3",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "tslint-config-prettier": "^1.18.0",

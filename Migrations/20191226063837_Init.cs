@@ -12,7 +12,7 @@ namespace Inventory.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(maxLength: 250, nullable: false),
                     Count = table.Column<float>(nullable: false),
                     EnumerationUnit = table.Column<string>(nullable: true)
@@ -27,7 +27,7 @@ namespace Inventory.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
@@ -45,7 +45,7 @@ namespace Inventory.Migrations
                     Title = table.Column<string>(maxLength: 50, nullable: true),
                     Name = table.Column<string>(maxLength: 250, nullable: false),
                     Surname = table.Column<string>(maxLength: 250, nullable: true),
-                    FullName = table.Column<string>(nullable: true, computedColumnSql: "LTRIM(RTRIM(ISNULL([Title],'') + ' ' + [Name] + ' ' + ISNULL([Surname],''))) PERSISTED"),
+                    FullName = table.Column<string>(nullable: true),
                     Avatar = table.Column<string>(nullable: true),
                     NationCode = table.Column<string>(maxLength: 10, nullable: true),
                     IdNumber = table.Column<string>(maxLength: 50, nullable: true),
@@ -71,7 +71,7 @@ namespace Inventory.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
@@ -86,8 +86,7 @@ namespace Inventory.Migrations
                 name: "UserClaim",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -171,8 +170,7 @@ namespace Inventory.Migrations
                 name: "UserRoleClaim",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -192,8 +190,7 @@ namespace Inventory.Migrations
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -204,22 +201,19 @@ namespace Inventory.Migrations
                 name: "UserNameIndex",
                 table: "User",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_PhoneNumber",
                 table: "User",
                 column: "PhoneNumber",
-                unique: true,
-                filter: "[PhoneNumber] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_UserName",
                 table: "User",
                 column: "UserName",
-                unique: true,
-                filter: "[UserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaim_UserId",
@@ -240,8 +234,7 @@ namespace Inventory.Migrations
                 name: "RoleNameIndex",
                 table: "UserRole",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleClaim_RoleId",

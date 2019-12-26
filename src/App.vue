@@ -122,6 +122,8 @@ export default Vue.extend({
         this.dialog = false;
         await this.loadData();
         this.resetForm();
+      } catch (e) {
+        this.showErrorMessage(e);
       } finally {
         this.saving = false;
       }
@@ -138,6 +140,8 @@ export default Vue.extend({
         );
         this.products = result.items;
         this.totalProducts = result.totalCount;
+      } catch (e) {
+        this.showErrorMessage(e);
       } finally {
         this.loading = false;
       }
@@ -155,6 +159,8 @@ export default Vue.extend({
           "Export.xlsx",
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );
+      } catch (e) {
+        this.showErrorMessage(e);
       } finally {
         this.exporting = false;
       }

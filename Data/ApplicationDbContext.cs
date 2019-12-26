@@ -18,8 +18,7 @@ namespace Inventory.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-             .UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"))
-             .AddInterceptors(new Extensions.HintCommandInterceptor());
+             .UseSqlite("Filename=./Database.db");
         }
 
         public virtual DbSet<Models.DataModels.Product> Products { get; set; }

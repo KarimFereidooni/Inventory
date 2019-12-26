@@ -15,6 +15,7 @@ namespace Inventory
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://localhost:5000", "https://localhost:5001");
                     webBuilder.UseElectron(args);
                     webBuilder.UseStartup<Startup>();
                 });
